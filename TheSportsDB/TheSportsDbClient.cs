@@ -1,4 +1,5 @@
 ﻿using Entities;
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace TheSportsDB
@@ -21,88 +22,50 @@ namespace TheSportsDB
 
         public List<Team> SearchTeamByName(string teamName)
         {
-            var listTeam = new List<Team>();
-
             var param = new Dictionary<string, string>
             {
                 { "t", teamName }
             };
 
             var result = _requestBuilder.Request(Endpoints.SearchTeams, param);
-            var players = result["team"];
-
-            foreach (var item in players)
-            {
-                listTeam.Add(Mapper.MapTeam(item));
-            }
-
-            return listTeam;
+            return JsonConvert.DeserializeObject<List<Team>>(result["team"]);
         }
 
         public List<Team> SearchTeamByShortCode(string shortCode)
         {
-            var listTeam = new List<Team>();
-
             var param = new Dictionary<string, string>
             {
                 { "sname", shortCode }
             };
 
             var result = _requestBuilder.Request(Endpoints.SearchTeams, param);
-            var players = result["team"];
-
-            foreach (var item in players)
-            {
-                listTeam.Add(Mapper.MapTeam(item));
-            }
-
-            return listTeam;
+            return JsonConvert.DeserializeObject<List<Team>>(result["team"]);
         }
 
         public List<Player> SearchPlayersFromTeam(string teamName)
         {
-            var listPlayer = new List<Player>();
-
             var param = new Dictionary<string, string>
             {
                 { "t", teamName }
             };
 
             var result = _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            var players = result["player"];
-
-            foreach (var item in players)
-            {
-                listPlayer.Add(Mapper.MapPlayer(item));
-            }
-
-            return listPlayer;
+            return JsonConvert.DeserializeObject<List<Team>>(result["player"]);
         }
 
         public List<Player> SearchPlayer(string playerName)
         {
-            var listPlayer = new List<Player>();
-
             var param = new Dictionary<string, string>
             {
                 { "p", playerName }
             };
 
             var result = _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            var players = result["player"];
-
-            foreach (var item in players)
-            {
-                listPlayer.Add(Mapper.MapPlayer(item));
-            }
-
-            return listPlayer;
+            return JsonConvert.DeserializeObject<List<Player>>(result["player"]);
         }
 
         public List<Player> SearchPlayer(string playerName, string teamName)
         {
-            var listPlayer = new List<Player>();
-
             var param = new Dictionary<string, string>
             {
                 { "p", playerName },
@@ -110,74 +73,35 @@ namespace TheSportsDB
             };
 
             var result = _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            var players = result["player"];
-
-            foreach (var item in players)
-            {
-                listPlayer.Add(Mapper.MapPlayer(item));
-            }
-
-            return listPlayer;
+            return JsonConvert.DeserializeObject<List<Player>>(result["player"]);
         }
 
         public List<Sport> ListAllSports()
         {
-            var listSport = new List<Sport>();
-
             var param = new Dictionary<string, string>();
 
             var result = _requestBuilder.Request(Endpoints.SearchAllSports, param);
-            var players = result["sports"];
-
-            if (players == null)
-                return listSport;
-
-            foreach (var item in players)
-            {
-                listSport.Add(Mapper.MapSport(item));
-            }
-
-            return listSport;
+            return JsonConvert.DeserializeObject<List<Sport>>(result["sports"]);
         }
 
         public List<League> ListAllLeagues()
         {
-            var listLeague = new List<League>();
-
             var param = new Dictionary<string, string>();
 
             var result = _requestBuilder.Request(Endpoints.AllLeagues, param);
-            var players = result["leagues"];
-
-            foreach (var item in players)
-            {
-                listLeague.Add(Mapper.MapLeague(item));
-            }
-
-            return listLeague;
+            return JsonConvert.DeserializeObject<List<League>>(result["leagues"]);
         }
 
         public List<Country> ListAllCountries()
         {
-            var listCountry = new List<Country>();
-
             var param = new Dictionary<string, string>();
 
             var result = _requestBuilder.Request(Endpoints.AllCountries, param);
-            var players = result["country"];
-
-            foreach (var item in players)
-            {
-                listCountry.Add(Mapper.MapCountry(item));
-            }
-
-            return listCountry;
+            return JsonConvert.DeserializeObject<List<Country>>(result["country"]);
         }
 
         public List<League> ListAllLeaguesByCountry(string country)
         {
-            var listLeague = new List<League>();
-
             var param = new Dictionary<string, string>
             {
                 { "c", country }
@@ -185,19 +109,11 @@ namespace TheSportsDB
 
             var result = _requestBuilder.Request(Endpoints.AllLeagues, param);
             var players = result["league"];
-
-            foreach (var item in players)
-            {
-                listLeague.Add(Mapper.MapLeague(item));
-            }
-
-            return listLeague;
+            return JsonConvert.DeserializeObject<List<League>>(result["league"]);
         }
 
         public List<League> ListAllLeaguesByCountry(string country, string sport)
         {
-            var listLeague = new List<League>();
-
             var param = new Dictionary<string, string>
             {
                 { "c", country },
@@ -205,14 +121,7 @@ namespace TheSportsDB
             };
 
             var result = _requestBuilder.Request(Endpoints.AllLeagues, param);
-            var players = result["league"];
-
-            foreach (var item in players)
-            {
-                listLeague.Add(Mapper.MapLeague(item));
-            }
-
-            return listLeague;
+            return JsonConvert.DeserializeObject<List<League>>(result["league"]);
         }
     }
 }
