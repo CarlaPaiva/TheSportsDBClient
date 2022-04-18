@@ -5,6 +5,8 @@ using System.IO;
 using System.Net;
 using System.Web;
 using Newtonsoft.Json.Linq;
+using Polly;
+using System.Threading.Tasks;
 
 namespace TheSportsDB
 {
@@ -15,28 +17,52 @@ namespace TheSportsDB
         public string APIKey { get; private set; }
         public string Endpoint { get; private set; }
         public Dictionary<string, string> Parameters { get; set; }
+        public int MaxRetryAttempts { get; private set; } = 1;
+        public TimeSpan PauseBetweenFailures { get; private set; } = TimeSpan.FromSeconds(2);
+
+
         public RequestBuilder(string apiKey)
         {
             this.APIKey = apiKey;
         }
 
-        public dynamic Request(string endpoint, Dictionary<string,string> parameters)
+        public RequestBuilder(string apiKey, int maxRetryAttempts)
+        {
+            this.APIKey = apiKey;
+            this.MaxRetryAttempts = maxRetryAttempts;
+        }
+
+        public RequestBuilder(string apiKey, int maxRetryAttempts, TimeSpan pauseBetweenFailures)
+        {
+            this.APIKey = apiKey;
+            this.MaxRetryAttempts = maxRetryAttempts;
+            this.PauseBetweenFailures = pauseBetweenFailures;
+        }
+
+        public async Task<dynamic> Request(string endpoint, Dictionary<string,string> parameters)
         {
             this.Endpoint = endpoint;
             this.SetParameters(parameters);
+            dynamic requestResult = null;
 
             var uri = GetURL();
 
             var request = (HttpWebRequest)WebRequest.Create(uri);
             request.AutomaticDecompression = DecompressionMethods.GZip;
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
+            var retryPolicy = Policy
+            .Handle<Exception>()
+            .WaitAndRetryAsync(this.MaxRetryAttempts, i => this.PauseBetweenFailures);
+
+            await retryPolicy.ExecuteAsync(async () =>
             {
+                using var response = await request.GetRequestStreamAsync();
+                using var reader = new StreamReader(response);
                 var json = reader.ReadToEnd();
-                return JObject.Parse(json);
-            }
+                requestResult = JObject.Parse(json);
+            });
+
+            return requestResult;
         }
 
         private string GetURL()
