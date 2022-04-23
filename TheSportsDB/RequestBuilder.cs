@@ -7,6 +7,9 @@ using System.Web;
 using Newtonsoft.Json.Linq;
 using Polly;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TheSportsDbTests")]
 
 namespace TheSportsDB
 {
@@ -41,28 +44,39 @@ namespace TheSportsDB
 
         public async Task<dynamic> Request(string endpoint, Dictionary<string,string> parameters)
         {
-            this.Endpoint = endpoint;
-            this.SetParameters(parameters);
             dynamic requestResult = null;
 
-            var uri = GetURL();
-
-            var request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip;
-
-            var retryPolicy = Policy
-            .Handle<Exception>()
-            .WaitAndRetryAsync(this.MaxRetryAttempts, i => this.PauseBetweenFailures);
-
-            await retryPolicy.ExecuteAsync(async () =>
+            try
             {
-                using var response = await request.GetRequestStreamAsync();
-                using var reader = new StreamReader(response);
-                var json = reader.ReadToEnd();
-                requestResult = JObject.Parse(json);
-            });
+                this.Endpoint = endpoint;
+                this.SetParameters(parameters);
 
-            return requestResult;
+                var uri = GetURL();
+
+                var retryPolicy = Policy
+                .Handle<Exception>()
+                .WaitAndRetryAsync(this.MaxRetryAttempts, i => this.PauseBetweenFailures);
+
+                await retryPolicy.ExecuteAsync(async () =>
+                {
+                    var request = (HttpWebRequest)WebRequest.Create(uri);
+                    request.AutomaticDecompression = DecompressionMethods.GZip;
+
+                    using var response = request.GetResponse();
+                    using var respStream = response.GetResponseStream();
+                    using var reader = new StreamReader(respStream);
+                    var json = reader.ReadToEnd();
+
+                    if (!string.IsNullOrWhiteSpace(json))
+                        requestResult = JObject.Parse(json);
+                });
+
+                return requestResult;
+            }
+            catch (Exception ex)
+            {
+                return requestResult;
+            }
         }
 
         private string GetURL()
