@@ -42,9 +42,9 @@ namespace TheSportsDB
             this.PauseBetweenFailures = pauseBetweenFailures;
         }
 
-        public async Task<dynamic> Request(string endpoint, Dictionary<string,string> parameters)
+        public async Task<JObject> Request(string endpoint, Dictionary<string,string> parameters)
         {
-            dynamic requestResult = null;
+            JObject requestResult = null;
 
             try
             {

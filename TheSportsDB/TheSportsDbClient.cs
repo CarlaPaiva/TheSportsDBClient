@@ -47,7 +47,11 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.SearchTeams, param);
-            return JsonConvert.DeserializeObject<List<Team>>(result["team"]);
+
+            if (result == null)
+                return null;
+
+            return JsonConvert.DeserializeObject<List<Team>>(result["team"].ToString());
         }
 
         /// <summary>
@@ -63,7 +67,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.SearchTeams, param);
-            return JsonConvert.DeserializeObject<List<Team>>(result["team"]);
+            return JsonConvert.DeserializeObject<List<Team>>(result["team"].ToString());
         }
 
         /// <summary>
@@ -79,7 +83,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            return JsonConvert.DeserializeObject<List<Team>>(result["player"]);
+            return JsonConvert.DeserializeObject<List<Player>>(result["player"].ToString());
         }
 
         /// <summary>
@@ -95,7 +99,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            return JsonConvert.DeserializeObject<List<Player>>(result["player"]);
+            return JsonConvert.DeserializeObject<List<Player>>(result["player"].ToString());
         }
 
         /// <summary>
@@ -113,7 +117,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.SearchPlayers, param);
-            return JsonConvert.DeserializeObject<List<Player>>(result["player"]);
+            return JsonConvert.DeserializeObject<List<Player>>(result["player"].ToString());
         }
 
         /// <summary>
@@ -125,7 +129,7 @@ namespace TheSportsDB
             var param = new Dictionary<string, string>();
 
             var result = await _requestBuilder.Request(Endpoints.SearchAllSports, param);
-            return JsonConvert.DeserializeObject<List<Sport>>(result["sports"]);
+            return JsonConvert.DeserializeObject<List<Sport>>(result["sports"].ToString());
         }
 
         /// <summary>
@@ -137,7 +141,7 @@ namespace TheSportsDB
             var param = new Dictionary<string, string>();
 
             var result = await _requestBuilder.Request(Endpoints.AllLeagues, param);
-            return JsonConvert.DeserializeObject<List<League>>(result["leagues"]);
+            return JsonConvert.DeserializeObject<List<League>>(result["leagues"].ToString());
         }
 
         /// <summary>
@@ -149,7 +153,7 @@ namespace TheSportsDB
             var param = new Dictionary<string, string>();
 
             var result = await _requestBuilder.Request(Endpoints.AllCountries, param);
-            return JsonConvert.DeserializeObject<List<Country>>(result["country"]);
+            return JsonConvert.DeserializeObject<List<Country>>(result["country"].ToString());
         }
 
         /// <summary>
@@ -165,7 +169,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.AllLeagues, param);
-            return JsonConvert.DeserializeObject<List<League>>(result["league"]);
+            return JsonConvert.DeserializeObject<List<League>>(result["league"].ToString());
         }
 
         /// <summary>
@@ -183,7 +187,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.AllLeagues, param);
-            return JsonConvert.DeserializeObject<List<League>>(result["league"]);
+            return JsonConvert.DeserializeObject<List<League>>(result["league"].ToString());
         }
     }
 }

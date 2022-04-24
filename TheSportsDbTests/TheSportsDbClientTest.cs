@@ -12,7 +12,7 @@ namespace TheSportsDbTests
         public async Task ReturnAllSports()
         {
             // Arrange
-            var client = new TheSportsDbClient();
+            var client = new TheSportsDbClient("2");
 
             // Act
             var result = await client.ListAllSportsAsync();
