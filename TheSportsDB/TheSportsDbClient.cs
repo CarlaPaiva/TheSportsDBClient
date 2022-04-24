@@ -153,7 +153,7 @@ namespace TheSportsDB
             var param = new Dictionary<string, string>();
 
             var result = await _requestBuilder.Request(Endpoints.AllCountries, param);
-            return JsonConvert.DeserializeObject<List<Country>>(result["country"].ToString());
+            return JsonConvert.DeserializeObject<List<Country>>(result["countries"].ToString());
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace TheSportsDB
             };
 
             var result = await _requestBuilder.Request(Endpoints.AllLeagues, param);
-            return JsonConvert.DeserializeObject<List<League>>(result["league"].ToString());
+            return JsonConvert.DeserializeObject<List<League>>(result["leagues"].ToString());
         }
 
         /// <summary>
