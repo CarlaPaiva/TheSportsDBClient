@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Authors>Carla Paiva</Authors>
+    <Company />
+    <PackageId>$(AssemblyName)Client</PackageId>
   </PropertyGroup>
 
   <ItemGroup>
