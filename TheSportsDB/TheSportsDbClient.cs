@@ -8,31 +8,17 @@ namespace TheSportsDB
 {
     public class TheSportsDbClient
     {
-        private string ApiKey { get; set; }
         private readonly RequestBuilder _requestBuilder;
         public TheSportsDbClient()
         {
-            this.ApiKey = "2";
-            _requestBuilder = new RequestBuilder(this.ApiKey);
+            _requestBuilder = new RequestBuilder(new TheSportsDBClientConfiguration());
         }
 
-        public TheSportsDbClient(string apiKey)
+        public TheSportsDbClient(TheSportsDBClientConfiguration configuration)
         {
-            this.ApiKey = apiKey;
-            _requestBuilder = new RequestBuilder(this.ApiKey);
+            _requestBuilder = new RequestBuilder(configuration);
         }
 
-        public TheSportsDbClient(string apiKey, int retryAttempts)
-        {
-            this.ApiKey = apiKey;
-            _requestBuilder = new RequestBuilder(this.ApiKey, retryAttempts);
-        }
-
-        public TheSportsDbClient(string apiKey, int retryAttempts, TimeSpan intervalBetweenAttempts)
-        {
-            this.ApiKey = apiKey;
-            _requestBuilder = new RequestBuilder(this.ApiKey, retryAttempts, intervalBetweenAttempts);
-        }
 
         /// <summary>
         /// Search for team by name.
@@ -105,7 +91,7 @@ namespace TheSportsDB
         /// <summary>
         /// Search for players by name and team name.
         /// </summary>
-        /// <param name="playerName">PLayers name</param>
+        /// <param name="playerName">Players name</param>
         /// <param name="teamName">teams name</param>
         /// <returns></returns>
         public async Task<List<Player>> SearchPlayerAsync(string playerName, string teamName)
@@ -118,6 +104,34 @@ namespace TheSportsDB
 
             var result = await _requestBuilder.Request(Endpoints.SearchPlayers, param);
             return JsonConvert.DeserializeObject<List<Player>>(result["player"].ToString());
+        }
+
+        /// <summary>
+        /// Search for event by event name
+        /// </summary>
+        /// <param name="eventName">Event name</param>
+        /// <returns></returns>
+        public async Task<List<Player>> SearchEventAsync(string eventName)
+        {
+            var param = new Dictionary<string, string>
+            {
+                { "e", eventName }
+            };
+
+            var result = await _requestBuilder.Request(Endpoints.SearchEvent, param);
+            return JsonConvert.DeserializeObject<List<Player>>(result.First.ToString());
+        }
+
+        public async Task<List<Player>> SearchEventAsync(string eventName, string season)
+        {
+            var param = new Dictionary<string, string>
+            {
+                { "e", eventName },
+                { "s", season }
+            };
+
+            var result = await _requestBuilder.Request(Endpoints.SearchEvent, param);
+            return JsonConvert.DeserializeObject<List<Player>>(result.First.ToString());
         }
 
         /// <summary>
