@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheSportsDB", "TheSportsDB\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Entities", "Entities\Entities.csproj", "{41A5B951-37CE-4377-B019-5E88F09E9E9B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheSportsDbTests", "TheSportsDbTests\TheSportsDbTests.csproj", "{3643E682-BA6F-4601-8C7C-DDEB541A31FD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{41A5B951-37CE-4377-B019-5E88F09E9E9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A5B951-37CE-4377-B019-5E88F09E9E9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A5B951-37CE-4377-B019-5E88F09E9E9B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3643E682-BA6F-4601-8C7C-DDEB541A31FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3643E682-BA6F-4601-8C7C-DDEB541A31FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3643E682-BA6F-4601-8C7C-DDEB541A31FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3643E682-BA6F-4601-8C7C-DDEB541A31FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

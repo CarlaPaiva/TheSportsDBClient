@@ -12,5 +12,6 @@
         public const string SearchAllSports = "all_sports.php";
         public const string SearchTeams = "searchteams.php";
         public const string SearchAllTeams = "search_all_teams.php";
+        public const string SearchEvent = "searchevents.php";
     }
 }

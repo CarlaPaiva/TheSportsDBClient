@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using Polly;
 using System.Threading.Tasks;
 using System.Runtime.CompilerServices;
+using Entities;
 
 [assembly: InternalsVisibleTo("TheSportsDbTests")]
 
@@ -15,31 +16,15 @@ namespace TheSportsDB
 {
     internal class RequestBuilder
     {
+        public Dictionary<string, string> Parameters { get; set; }
+        public string Endpoint { get; private set; }
         public string Url { get; } = "https://www.thesportsdb.com/api";
         public string Version { get; } = "v1";
-        public string APIKey { get; private set; }
-        public string Endpoint { get; private set; }
-        public Dictionary<string, string> Parameters { get; set; }
-        public int MaxRetryAttempts { get; private set; } = 1;
-        public TimeSpan PauseBetweenFailures { get; private set; } = TimeSpan.FromSeconds(2);
+        private readonly TheSportsDBClientConfiguration Configuration;
 
-
-        public RequestBuilder(string apiKey)
+        public RequestBuilder(TheSportsDBClientConfiguration configuration)
         {
-            this.APIKey = apiKey;
-        }
-
-        public RequestBuilder(string apiKey, int maxRetryAttempts)
-        {
-            this.APIKey = apiKey;
-            this.MaxRetryAttempts = maxRetryAttempts;
-        }
-
-        public RequestBuilder(string apiKey, int maxRetryAttempts, TimeSpan pauseBetweenFailures)
-        {
-            this.APIKey = apiKey;
-            this.MaxRetryAttempts = maxRetryAttempts;
-            this.PauseBetweenFailures = pauseBetweenFailures;
+            this.Configuration = configuration;
         }
 
         public async Task<JObject> Request(string endpoint, Dictionary<string,string> parameters)
@@ -55,7 +40,7 @@ namespace TheSportsDB
 
                 var retryPolicy = Policy
                 .Handle<Exception>()
-                .WaitAndRetryAsync(this.MaxRetryAttempts, i => this.PauseBetweenFailures);
+                .WaitAndRetryAsync(this.Configuration.RetryAttempts, i => this.Configuration.IntervalBetweenAttempts);
 
                 await retryPolicy.ExecuteAsync(async () =>
                 {
@@ -81,7 +66,7 @@ namespace TheSportsDB
 
         private string GetURL()
         {
-            var uri = $"{this.Url}/{this.Version}/json/{this.APIKey}/{this.Endpoint}";
+            var uri = $"{this.Url}/{this.Version}/json/{this.Configuration.ApiKey}/{this.Endpoint}";
             return QueryHelpers.AddQueryString(uri, this.Parameters);
         }
 
